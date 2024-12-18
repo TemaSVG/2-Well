@@ -45,22 +45,24 @@ public class ProductBasket {
             System.out.println("в корзине пусто");
         }
     }
+
     public boolean searchProductByName(String nameProduct) {
         boolean buff = false;
-        for (Product product : productBasket){
-            if(product != null && nameProduct.equals(product.getNameProduct())) {
-                    buff = true;
+        for (Product product : productBasket) {
+            if (product != null && nameProduct.equals(product.getNameProduct())) {
+                buff = true;
             }
         }
-        if (buff){
+        if (buff) {
             return true;
         } else {
             return false;
         }
     }
+
     public void clearBasket() {
         int i = 0;
-        for (Product product : productBasket){
+        for (Product product : productBasket) {
             productBasket[i] = null;
             i++;
         }
