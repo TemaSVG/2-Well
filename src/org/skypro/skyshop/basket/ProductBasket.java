@@ -53,11 +53,7 @@ public class ProductBasket {
                 buff = true;
             }
         }
-        if (buff) {
-            return true;
-        } else {
-            return false;
-        }
+        return buff;
     }
 
     public void clearBasket() {
