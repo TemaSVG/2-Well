@@ -78,9 +78,4 @@ public class ProductBasket {
         }
     }
 
-    @Override
-    public String toString() {
-        return null;
-    }
-
 }
