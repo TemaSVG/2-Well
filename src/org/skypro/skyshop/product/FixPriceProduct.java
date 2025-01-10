@@ -9,6 +9,7 @@ public class FixPriceProduct extends Product {
         this.FIX_PRICE_PRODUCT = FIX_PRICE_PRODUCT;
     }
 
+
     @Override
     public double getPriceProduct() {
         return FIX_PRICE_PRODUCT;

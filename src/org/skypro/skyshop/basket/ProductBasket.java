@@ -4,7 +4,7 @@ import org.skypro.skyshop.product.Product;
 
 
 public class ProductBasket {
-    private Product[] productBasket;
+    final Product[] productBasket;
 
 
     public ProductBasket(Product[] productBasket) {
@@ -72,7 +72,7 @@ public class ProductBasket {
 
     public void clearBasket() {
         int i = 0;
-        for (Product product : productBasket) {
+        for (Product ignored : productBasket) {
             productBasket[i] = null;
             i++;
         }

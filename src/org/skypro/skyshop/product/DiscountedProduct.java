@@ -1,16 +1,15 @@
 package org.skypro.skyshop.product;
 
-import org.skypro.skyshop.basket.ProductBasket;
-
 public class DiscountedProduct extends Product {
-    int originalPriceProduct;
-    int discount;
+    final int originalPriceProduct;
+    final int discount;
 
     public DiscountedProduct(String nameProduct, int discount, int originalPriceProduct) {
         super(nameProduct);
         this.discount = discount;
         this.originalPriceProduct = originalPriceProduct;
     }
+
 
     @Override
     public double getPriceProduct() {
