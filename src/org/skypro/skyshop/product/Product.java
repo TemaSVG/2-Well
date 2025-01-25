@@ -1,12 +1,20 @@
 package org.skypro.skyshop.product;
 
 
+import javax.print.DocFlavor;
+
 public abstract class Product implements ISearchable {
     final String nameProduct;
 
-    public Product(String nameProduct) {
+    public Product(String nameProduct) throws NullPointerException {
         this.nameProduct = nameProduct;
+
+        if (nameProduct.isBlank()) {
+            throw new NullPointerException("Имя продукта не может быть пустым");
+        }
     }
+
+
 
     @Override
     public String getTypeContent() {

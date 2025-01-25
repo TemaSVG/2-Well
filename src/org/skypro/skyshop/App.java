@@ -2,10 +2,11 @@ package org.skypro.skyshop;
 
 import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.core.SearchEngine;
+import org.skypro.skyshop.exception.BestResultNotFound;
 import org.skypro.skyshop.product.*;
 
 public class App {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws BestResultNotFound {
         Product[] products = new Product[5];
         ProductBasket Basket = new ProductBasket(products);
         Basket.addProductBasket(new FixPriceProduct("Сыр", 100));
@@ -32,5 +33,21 @@ public class App {
                 System.out.println(String.format("Тип %s строка %s", elem.getTypeContent(), elem.searchTerm()));
             }
         }
+
+        try {
+            new SimpleProduct("Product", 0);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            System.out.println("Проверка окончена.");
+        }
+        System.out.println(searchEngine.findTheMostSuitable("е"));
+
+        try {
+            searchEngine.findTheMostSuitable("1");
+        } catch (BestResultNotFound e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 }
