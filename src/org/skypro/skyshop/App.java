@@ -7,33 +7,32 @@ import org.skypro.skyshop.product.*;
 
 public class App {
     public static void main(String[] args) throws BestResultNotFound {
-        Product[] products = new Product[5];
-        ProductBasket Basket = new ProductBasket(products);
+        System.out.println("Демонстрация работы корзины");
+        ProductBasket Basket = new ProductBasket();
         Basket.addProductBasket(new FixPriceProduct("Сыр", 100));
         Basket.addProductBasket(new SimpleProduct("Масло", 150));
         Basket.addProductBasket(new DiscountedProduct("Сахар", 10, 100));
         Basket.addProductBasket(new DiscountedProduct("Хлеб", 23, 60));
-        Basket.totalСostBasket();
         Basket.printСontentsBasket();
         System.out.println(Basket.searchProductByName("Сыр"));
-        Basket.clearBasket();
 
         Article articleBread = new Article("Булка", "вкусная");
         Article articleChease = new Article("Сырочек", "Очень вкусный");
+        System.out.println();
 
-        SearchEngine searchEngine = new SearchEngine(0);
+        System.out.println("Демонстрация поиска");
+        SearchEngine searchEngine = new SearchEngine();
         searchEngine.add(articleBread);
         searchEngine.add(articleChease);
         searchEngine.add(new FixPriceProduct("Сыр", 100));
         searchEngine.add(new SimpleProduct("Масло", 150));
         searchEngine.add(new DiscountedProduct("Сахар", 10, 100));
         searchEngine.add(new DiscountedProduct("Хлеб", 23, 60));
-        for (ISearchable elem : searchEngine.search("О")) {
-            if (elem != null) {
-                System.out.println(String.format("Тип %s строка %s", elem.getTypeContent(), elem.searchTerm()));
-            }
-        }
+        searchEngine.add(new FixPriceProduct("Апельсины", 120));
+        System.out.println(searchEngine.search("а"));
+        System.out.println();
 
+        System.out.println("Демонстрация исключений");
         try {
             new SimpleProduct("Product", 0);
         } catch (IllegalArgumentException e) {
@@ -48,6 +47,13 @@ public class App {
         } catch (BestResultNotFound e) {
             System.out.println(e.getMessage());
         }
+        System.out.println();
+
+        System.out.println("Демонстрация удаления товара из корзины по имени");
+        System.out.println(Basket.removeProductByName("Сыр"));
+        Basket.printСontentsBasket();
+        Basket.removeProductByName("яйцо");
+
 
     }
 }
