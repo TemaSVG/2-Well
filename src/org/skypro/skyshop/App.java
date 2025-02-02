@@ -15,21 +15,18 @@ public class App {
         Basket.addProductBasket(new DiscountedProduct("Хлеб", 23, 60));
         Basket.printСontentsBasket();
         System.out.println(Basket.searchProductByName("Сыр"));
-
-        Article articleBread = new Article("Булка", "вкусная");
-        Article articleChease = new Article("Сырочек", "Очень вкусный");
         System.out.println();
 
         System.out.println("Демонстрация поиска");
         SearchEngine searchEngine = new SearchEngine();
-        searchEngine.add(articleBread);
-        searchEngine.add(articleChease);
         searchEngine.add(new FixPriceProduct("Сыр", 100));
         searchEngine.add(new SimpleProduct("Масло", 150));
         searchEngine.add(new DiscountedProduct("Сахар", 10, 100));
         searchEngine.add(new DiscountedProduct("Хлеб", 23, 60));
         searchEngine.add(new FixPriceProduct("Апельсины", 120));
-        System.out.println(searchEngine.search("а"));
+        searchEngine.add(new Article("Сырочек", "Очень вкусный"));
+        searchEngine.add(new Article("Булка", "вкусная"));
+        System.out.println(searchEngine.search("О вк"));
         System.out.println();
 
         System.out.println("Демонстрация исключений");
@@ -53,7 +50,7 @@ public class App {
         System.out.println(Basket.removeProductByName("Сыр"));
         Basket.printСontentsBasket();
         Basket.removeProductByName("яйцо");
-
+        System.out.println();
 
     }
 }

@@ -5,6 +5,8 @@ import org.skypro.skyshop.product.ISearchable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class SearchEngine {
     private List<ISearchable> searchable;
@@ -13,13 +15,21 @@ public class SearchEngine {
         this.searchable = new ArrayList<>();
     }
 
-    public List<ISearchable> search(String search) {
-        List<ISearchable> result = new ArrayList<>();
+    public Map<String, ISearchable> search(String search) {
+        Map<String, ISearchable> result = new TreeMap<>();
+        String[] searchTerm = search.toLowerCase().split(" ");
+
         for (ISearchable Searchable : searchable) {
-            if (Searchable.searchTerm().toLowerCase().contains(search.toLowerCase())) {
-                result.add(Searchable);
+            boolean coincidences = true;
+            for (String term : searchTerm)
+                if (!Searchable.searchTerm().toLowerCase().contains(term)) {
+                    coincidences = false;
+                    break;
                 }
+            if (coincidences) {
+                result.put(Searchable.searchTerm(), Searchable);
             }
+        }
         return result;
     }
 
@@ -27,7 +37,7 @@ public class SearchEngine {
         searchable.add(elem);
     }
 
-    public ISearchable findTheMostSuitable(String search) throws BestResultNotFound{
+    public ISearchable findTheMostSuitable(String search) throws BestResultNotFound {
         if (searchable == null) {
             throw new IllegalArgumentException("Объект поиска нге может быть null");
         }
