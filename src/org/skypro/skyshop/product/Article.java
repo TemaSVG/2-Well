@@ -26,6 +26,6 @@ public class Article implements ISearchable {
 
     @Override
     public String toString() {
-        return articleTitle + "\n" + articleContent;
+        return articleTitle + " " + articleContent;
     }
 }

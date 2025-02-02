@@ -3,35 +3,28 @@ package org.skypro.skyshop.core;
 import org.skypro.skyshop.exception.BestResultNotFound;
 import org.skypro.skyshop.product.ISearchable;
 
-public class SearchEngine {
-    ISearchable searchable[];
+import java.util.ArrayList;
+import java.util.List;
 
-    public SearchEngine(int RangeArr) {
-        searchable = new ISearchable[RangeArr];
+public class SearchEngine {
+    private List<ISearchable> searchable;
+
+    public SearchEngine() {
+        this.searchable = new ArrayList<>();
     }
 
-    public ISearchable[] search(String search) {
-        ISearchable[] result = new ISearchable[5];
-        int i = 0;
-        for (ISearchable Searchable : this.searchable) {
+    public List<ISearchable> search(String search) {
+        List<ISearchable> result = new ArrayList<>();
+        for (ISearchable Searchable : searchable) {
             if (Searchable.searchTerm().toLowerCase().contains(search.toLowerCase())) {
-                result[i] = Searchable;
-                i++;
-                if (i > 4) {
-                    break;
+                result.add(Searchable);
                 }
             }
-        }
         return result;
     }
 
     public void add(ISearchable elem) {
-        ISearchable[] buff = new ISearchable[searchable.length + 1];
-        for (int i = 0; i < searchable.length; i++) {
-            buff[i] = searchable[i];
-        }
-        buff[buff.length - 1] = elem;
-        searchable = buff;
+        searchable.add(elem);
     }
 
     public ISearchable findTheMostSuitable(String search) throws BestResultNotFound{
