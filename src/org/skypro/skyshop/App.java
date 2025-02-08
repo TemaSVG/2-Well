@@ -52,5 +52,10 @@ public class App {
         Basket.removeProductByName("яйцо");
         System.out.println();
 
+        System.out.println("Демонстрация сортировки");
+        for (ISearchable result : searchEngine.getSortedResult()) {
+            System.out.println(result.searchTerm());
+        }
+
     }
 }

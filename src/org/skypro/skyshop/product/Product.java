@@ -2,6 +2,7 @@ package org.skypro.skyshop.product;
 
 
 import javax.print.DocFlavor;
+import java.util.Objects;
 
 public abstract class Product implements ISearchable {
     final String nameProduct;
@@ -14,7 +15,23 @@ public abstract class Product implements ISearchable {
         }
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
 
+        Product product = (Product) obj;
+        return Objects.equals(nameProduct, product.nameProduct);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(nameProduct);
+    }
 
     @Override
     public String getTypeContent() {
