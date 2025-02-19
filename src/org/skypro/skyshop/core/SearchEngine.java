@@ -13,8 +13,8 @@ public class SearchEngine {
         this.searchable = new HashSet<>();
     }
 
-    public Map<String, ISearchable> search(String search) {
-        Map<String, ISearchable> result = new TreeMap<>();
+    public Set<ISearchable> search(String search) {
+        Set<ISearchable> result = new TreeSet<>(Comparator.comparing(ISearchable::searchTerm));
         String[] searchTerm = search.toLowerCase().split(" ");
 
         for (ISearchable Searchable : searchable) {
@@ -25,7 +25,7 @@ public class SearchEngine {
                     break;
                 }
             if (coincidences) {
-                result.put(Searchable.searchTerm(), Searchable);
+                result.add(Searchable);
             }
         }
         return result;
@@ -42,9 +42,6 @@ public class SearchEngine {
     }
 
     public ISearchable findTheMostSuitable(String search) throws BestResultNotFound {
-        if (searchable == null) {
-            throw new IllegalArgumentException("Объект поиска нге может быть null");
-        }
         if (searchable.toString().isEmpty()) {
             throw new IllegalArgumentException("Объект поиска не может быть пустым");
         }

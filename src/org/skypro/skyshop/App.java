@@ -26,7 +26,7 @@ public class App {
         searchEngine.add(new FixPriceProduct("Апельсины", 120));
         searchEngine.add(new Article("Сырочек", "Очень вкусный"));
         searchEngine.add(new Article("Булка", "вкусная"));
-        System.out.println(searchEngine.search("О вк"));
+        System.out.println(searchEngine.search("ы"));
         System.out.println();
 
         System.out.println("Демонстрация исключений");
@@ -54,7 +54,7 @@ public class App {
 
         System.out.println("Демонстрация сортировки");
         for (ISearchable result : searchEngine.getSortedResult()) {
-            System.out.println(result.searchTerm());
+            System.out.println(result);
         }
 
     }
