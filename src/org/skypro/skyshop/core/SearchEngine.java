@@ -2,35 +2,46 @@ package org.skypro.skyshop.core;
 
 import org.skypro.skyshop.exception.BestResultNotFound;
 import org.skypro.skyshop.product.ISearchable;
+import org.skypro.skyshop.product.Product;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class SearchEngine {
-    private List<ISearchable> searchable;
+    private Set<ISearchable> searchable;
 
     public SearchEngine() {
-        this.searchable = new ArrayList<>();
+        this.searchable = new HashSet<>();
     }
 
-    public List<ISearchable> search(String search) {
-        List<ISearchable> result = new ArrayList<>();
+    public Set<ISearchable> search(String search) {
+        Set<ISearchable> result = new TreeSet<>(Comparator.comparing(ISearchable::searchTerm));
+        String[] searchTerm = search.toLowerCase().split(" ");
+
         for (ISearchable Searchable : searchable) {
-            if (Searchable.searchTerm().toLowerCase().contains(search.toLowerCase())) {
-                result.add(Searchable);
+            boolean coincidences = true;
+            for (String term : searchTerm)
+                if (!Searchable.searchTerm().toLowerCase().contains(term)) {
+                    coincidences = false;
+                    break;
                 }
+            if (coincidences) {
+                result.add(Searchable);
             }
+        }
         return result;
     }
 
     public void add(ISearchable elem) {
-        searchable.add(elem);
+            searchable.add(elem);
     }
 
-    public ISearchable findTheMostSuitable(String search) throws BestResultNotFound{
-        if (searchable == null) {
-            throw new IllegalArgumentException("Объект поиска нге может быть null");
-        }
+    public Set<ISearchable> getSortedResult() {
+        Set<ISearchable> sortedResults = new TreeSet<>(new SearchableComparator());
+        sortedResults.addAll(searchable);
+        return sortedResults;
+    }
+
+    public ISearchable findTheMostSuitable(String search) throws BestResultNotFound {
         if (searchable.toString().isEmpty()) {
             throw new IllegalArgumentException("Объект поиска не может быть пустым");
         }

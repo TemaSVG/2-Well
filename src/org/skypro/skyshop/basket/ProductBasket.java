@@ -1,43 +1,56 @@
 package org.skypro.skyshop.basket;
+
 import org.skypro.skyshop.product.Product;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 
 public class ProductBasket {
-    final List<Product> productBasket;
+    final HashMap<String, List<Product>> productBasket;
 
 
     public ProductBasket() {
-        productBasket = new LinkedList<>();
+        productBasket = new HashMap<>();
     }
 
     public int countSpecialProducts() {
         int countSpecialProduct = 0;
-        for (Product product : productBasket) {
-            if ((product != null) && (product.isSpecial())) {
-                countSpecialProduct++;
+        for (List<Product> products : productBasket.values()) {
+            for (Product product : products) {
+                if ((product != null) && (product.isSpecial())) {
+                    countSpecialProduct++;
+                }
             }
         }
         return countSpecialProduct;
     }
 
     public void addProductBasket(Product newProduct) {
-        productBasket.add(newProduct);
+        productBasket.computeIfAbsent(newProduct.getNameProduct(), k -> new ArrayList<>()).add(newProduct);
     }
 
     public List<Product> removeProductByName(String name) {
         List<Product> removedProducts = new LinkedList<>();
 
-        productBasket.removeIf(product -> {
-            if (product.getNameProduct().equals(name)) {
-                removedProducts.add(product);
-                return true;
+        Iterator<Map.Entry<String, List<Product>>> iterator = productBasket.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<String, List<Product>> entry = iterator.next();
+            List<Product> products = entry.getValue();
+
+            Iterator<Product> productIterator = products.iterator();
+            while (productIterator.hasNext()) {
+                Product product = productIterator.next();
+                if (product.getNameProduct().equals(name)) {
+                    removedProducts.add(product);
+                    productIterator.remove();
+                }
             }
-            return false;
-        });
+            if (products.isEmpty()) {
+                iterator.remove();
+            }
+        }
+
         if (removedProducts.isEmpty()) {
             System.out.println("Список удаленных товаров пуст");
         }
@@ -46,8 +59,10 @@ public class ProductBasket {
 
     public double totalСostBasket() {
         double result = 0;
-        for (Product product : productBasket) {
-            result += product.getPriceProduct();
+        for (List<Product> products : productBasket.values()) {
+            for (Product product : products) {
+                result += product.getPriceProduct();
+            }
         }
         return result;
     }
@@ -59,9 +74,10 @@ public class ProductBasket {
             System.out.println("Корзина пуста.");
         } else {
             System.out.println("Продукты в корзине:");
-            for (Product product : productBasket) {
-                System.out.println(String.format("Название: %s, Цена: %.2f", product.getNameProduct(), product.getPriceProduct()));
-            }
+            for (List<Product> products : productBasket.values())
+                for (Product product : products) {
+                    System.out.println(String.format("Название: %s, Цена: %.2f", product.getNameProduct(), product.getPriceProduct()));
+                }
             System.out.println(String.format("Итого: %s", totalСostBasket()));
             System.out.println(String.format("Специальных товаров: %s", countSpecialProducts()));
         }
@@ -69,7 +85,8 @@ public class ProductBasket {
 
     public boolean searchProductByName(String nameProduct) {
         boolean buff = false;
-        for (Product product : productBasket) {
+        for (List<Product> products : productBasket.values())
+        for (Product product : products) {
             if (product != null && nameProduct.equals(product.getNameProduct())) {
                 buff = true;
             }
