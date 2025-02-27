@@ -5,6 +5,7 @@ import org.skypro.skyshop.product.ISearchable;
 import org.skypro.skyshop.product.Product;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SearchEngine {
     private Set<ISearchable> searchable;
@@ -14,21 +15,12 @@ public class SearchEngine {
     }
 
     public Set<ISearchable> search(String search) {
-        Set<ISearchable> result = new TreeSet<>(Comparator.comparing(ISearchable::searchTerm));
         String[] searchTerm = search.toLowerCase().split(" ");
 
-        for (ISearchable Searchable : searchable) {
-            boolean coincidences = true;
-            for (String term : searchTerm)
-                if (!Searchable.searchTerm().toLowerCase().contains(term)) {
-                    coincidences = false;
-                    break;
-                }
-            if (coincidences) {
-                result.add(Searchable);
-            }
-        }
-        return result;
+        return searchable.stream()
+                .filter(serchebleItem -> Arrays.stream(searchTerm)
+                        .allMatch(term -> serchebleItem.searchTerm().toLowerCase().contains(term)))
+                .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(ISearchable::searchTerm))));
     }
 
     public void add(ISearchable elem) {

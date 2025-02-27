@@ -3,6 +3,7 @@ package org.skypro.skyshop.basket;
 import org.skypro.skyshop.product.Product;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class ProductBasket {
@@ -13,16 +14,11 @@ public class ProductBasket {
         productBasket = new HashMap<>();
     }
 
-    public int countSpecialProducts() {
-        int countSpecialProduct = 0;
-        for (List<Product> products : productBasket.values()) {
-            for (Product product : products) {
-                if ((product != null) && (product.isSpecial())) {
-                    countSpecialProduct++;
-                }
-            }
-        }
-        return countSpecialProduct;
+    public long countSpecialProducts() {
+        return productBasket.values().stream()
+                .flatMap(Collection::stream)
+                .filter(Product::isSpecial)
+                .count();
     }
 
     public void addProductBasket(Product newProduct) {
@@ -30,26 +26,15 @@ public class ProductBasket {
     }
 
     public List<Product> removeProductByName(String name) {
-        List<Product> removedProducts = new LinkedList<>();
+        List<Product> removedProducts = productBasket.values().stream()
+                .flatMap(Collection::stream)
+                .filter(product -> product.getNameProduct().equals(name))
+                .collect(Collectors.toList());
 
-        Iterator<Map.Entry<String, List<Product>>> iterator = productBasket.entrySet().iterator();
-
-        while (iterator.hasNext()) {
-            Map.Entry<String, List<Product>> entry = iterator.next();
-            List<Product> products = entry.getValue();
-
-            Iterator<Product> productIterator = products.iterator();
-            while (productIterator.hasNext()) {
-                Product product = productIterator.next();
-                if (product.getNameProduct().equals(name)) {
-                    removedProducts.add(product);
-                    productIterator.remove();
-                }
-            }
-            if (products.isEmpty()) {
-                iterator.remove();
-            }
-        }
+        productBasket.entrySet().removeIf(entry -> {
+            entry.getValue().removeIf(product -> product.getNameProduct().equals(name));
+            return entry.getValue().isEmpty();
+        });
 
         if (removedProducts.isEmpty()) {
             System.out.println("Список удаленных товаров пуст");
@@ -58,13 +43,10 @@ public class ProductBasket {
     }
 
     public double totalСostBasket() {
-        double result = 0;
-        for (List<Product> products : productBasket.values()) {
-            for (Product product : products) {
-                result += product.getPriceProduct();
-            }
-        }
-        return result;
+        return productBasket.values().stream()
+                .flatMap(Collection::stream)
+                .mapToDouble(Product::getPriceProduct)
+                .sum();
     }
 
     public void printСontentsBasket() {
@@ -74,24 +56,18 @@ public class ProductBasket {
             System.out.println("Корзина пуста.");
         } else {
             System.out.println("Продукты в корзине:");
-            for (List<Product> products : productBasket.values())
-                for (Product product : products) {
-                    System.out.println(String.format("Название: %s, Цена: %.2f", product.getNameProduct(), product.getPriceProduct()));
-                }
+            productBasket.values().stream()
+                            .flatMap(Collection::stream)
+                            .forEach(product -> System.out.println(String.format("Название: %s, Цена: %.2f", product.getNameProduct(), product.getPriceProduct())));
             System.out.println(String.format("Итого: %s", totalСostBasket()));
             System.out.println(String.format("Специальных товаров: %s", countSpecialProducts()));
         }
     }
 
     public boolean searchProductByName(String nameProduct) {
-        boolean buff = false;
-        for (List<Product> products : productBasket.values())
-        for (Product product : products) {
-            if (product != null && nameProduct.equals(product.getNameProduct())) {
-                buff = true;
-            }
-        }
-        return buff;
+        return productBasket.values().stream()
+                .flatMap(Collection::stream)
+                .anyMatch(product -> product.getNameProduct().equals(nameProduct));
     }
 
     public void clearBasket() {
